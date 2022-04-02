@@ -66,13 +66,13 @@ void loop() {
     myAnaToDigInput = 1;//A4 and A5 only read analog so this converts it
     }else{//A4 and A5 only read analog so this converts it
     myAnaToDigInput = 0;//A4 and A5 only read analog so this converts it
-  }
+  }// to close the analogValue if
 
   if (myAnaToDigInput == LOW){//A4 and A5 only read analog so this converts it
     digitalWrite (CONTROLLINO_D7,LOW);//A4 and A5 only read analog so this converts it
     }else{
     digitalWrite(CONTROLLINO_D7,HIGH);//A4 and A5 only read analog so this converts it
-  }
+  }//closed the if myAnaToDigInput
   
   digitalRead(CONTROLLINO_A2);    // signal of the prox switch worked..
   if (digitalRead(CONTROLLINO_A2)==LOW){;// forsome reason seen LOW
