@@ -1,0 +1,110 @@
+[code]
+/*
+  So many stolen codes that I have used to credit for y’all
+
+I want to make a few global millis times and get rid if the delays below but this is my 1 APR22 IG post code
+ 
+*/
+#include <Controllino.h>
+// the setup function runs once when you press reset or power the board
+
+// constants won't change, Used to set a pin number:
+//const int ledPin = LED_BUILTIN;// copy from the stolen codem Grayed caused not for code
+//Variable will change:
+int ledState = LOW;   // ledState used to set the LED Grayed caused not for code
+//Generally you should use unsighned long" for variables that hold time
+//The value will quickly become to large for a int to store
+unsigned long previousMillis = 0;
+// constants won't change:
+const long interval = 2000;  // interval at which to blink(milliseconds)
+
+void setup() {
+  // initialize digital pin LED_BUILTIN as an output.
+  pinMode(CONTROLLINO_D0, OUTPUT); // Hooked to my LED light tiggered my sensor
+  pinMode(CONTROLLINO_D1, OUTPUT);// millis timed blinking light triggered with D0
+  pinMode(CONTROLLINO_D2, OUTPUT);// NOt used
+  pinMode(CONTROLLINO_D3, OUTPUT);// NOt used
+  pinMode(CONTROLLINO_D4, OUTPUT);// actuator  motor controller
+  pinMode(CONTROLLINO_D5, OUTPUT);// actuator  motor controller
+  pinMode(CONTROLLINO_D6, OUTPUT);// NOt used
+  pinMode(CONTROLLINO_D7, OUTPUT);// inside light2 after converting analog input
+  pinMode(CONTROLLINO_A0, OUTPUT); //  Not used
+  pinMode(CONTROLLINO_A1, INPUT); //Red push switch
+  pinMode(CONTROLLINO_A2, INPUT);  // To read the input of the sensor input for
+  pinMode(CONTROLLINO_A3, OUTPUT); //  Not used	Should be door switch 1
+  pinMode(CONTROLLINO_A4, OUTPUT); //  Not used Should be door switch 2
+  pinMode(CONTROLLINO_A5, INPUT);   //  put hall effect sensor on it
+  Serial.begin(9600); // to read the input of the sensor
+
+  
+}//closes the setup loop
+
+// the loop function runs over and over again forever
+void loop() {
+  digitalRead(CONTROLLINO_A1);
+  while (digitalRead(CONTROLLINO_A1)==HIGH){// used a while cause it wouldn't turn on D0 without a delay
+  digitalWrite(CONTROLLINO_D0,HIGH);//LED a  Bar
+  digitalWrite(CONTROLLINO_D1,HIGH);// LED strip
+  delay(5000);// delay to leave light in a little after switch maybe even debounce
+  //digitalWrite(CONTROLLINO_D6,HIGH);//NOT moving it low is only 9 volts hashed cause moved case light to D7
+ 
+  
+  if(digitalRead(CONTROLLINO_A1) == HIGH){
+    digitalWrite(CONTROLLINO_D4,LOW);// push out actuator
+    digitalWrite(CONTROLLINO_D5,HIGH);
+  }else{
+    digitalWrite(CONTROLLINO_D4,HIGH);// pull in actuator
+    digitalWrite(CONTROLLINO_D5,LOW);
+    delay(3000);// give time to pull back actuator
+  }
+  }
+  int analogValue = analogRead(CONTROLLINO_A5);//A4 and A5 only read analog so this converts it
+  int myAnaToDigInput;//A4 and A5 only read analog so this converts it
+
+  if (analogValue > 600){//A4 and A5 only read analog so this converts it
+    myAnaToDigInput = 1;//A4 and A5 only read analog so this converts it
+    }else{//A4 and A5 only read analog so this converts it
+    myAnaToDigInput = 0;//A4 and A5 only read analog so this converts it
+  }
+
+  if (myAnaToDigInput == LOW){//A4 and A5 only read analog so this converts it
+    digitalWrite (CONTROLLINO_D7,LOW);//A4 and A5 only read analog so this converts it
+    }else{
+    digitalWrite(CONTROLLINO_D7,HIGH);//A4 and A5 only read analog so this converts it
+  }
+  
+  digitalRead(CONTROLLINO_A2);    // signal of the prox switch worked..
+  if (digitalRead(CONTROLLINO_A2)==LOW){;// forsome reason seen LOW
+  digitalWrite(CONTROLLINO_D0,HIGH);
+  }else {
+  digitalWrite(CONTROLLINO_D0,LOW); }
+  int sensorValue = analogRead(CONTROLLINO_A2);
+  Serial.print(sensorValue);
+  Serial.println();
+  Serial.print(myAnaToDigInput);
+  Serial.println();
+  delay(10);                       // wait for a seco
+  unsigned long currentMillis = millis();   // check time since last blink
+
+  if(digitalRead (CONTROLLINO_A2)==LOW){
+    
+    if(currentMillis-previousMillis >= interval){
+      previousMillis = currentMillis;//saved the last time you blinks the led
+      if(ledState ==LOW){
+      ledState = HIGH;
+      } else{
+      ledState = LOW;
+      }//closes the else    
+    }//closes the millis if
+  }//Closes out the if LOW
+     
+ if(digitalRead (CONTROLLINO_A2)==HIGH){
+   ledState = LOW;
+   }//closes out the if HIGH function        
+  
+ digitalWrite(CONTROLLINO_D1,ledState);//Writes the D1 state from the IF and int
+ digitalWrite(CONTROLLINO_D4,LOW);//To turn off the actuator controller wii get rid of if I get rid of delays
+ 
+  
+}//closes the loop 
+[/code]
